@@ -7,12 +7,14 @@ description: Filter and rank open issues by the user's objective (highest merge 
 
 Requires the output of `project-brief`.
 
-## 1. Ask the objective
+## 1. Ask the user
 
-Ask the user:
+Objective:
 
 - **Highest merge chance**: small, wanted, easy to review
 - **Greatest impact**: painful bug even if harder
+
+Environment: "Do you have any special setup? (OS, GPU or hardware, cloud accounts)". Flag issues that need a setup the user lacks as "Cannot reproduce with your setup"; do not recommend Proceed for them.
 
 ## 2. Hard filters
 
@@ -26,7 +28,7 @@ Drop the issue if any apply:
 - Module review health is **Closed** in the `project-brief` table
 - Security-labeled, unless public and explicitly open to contributors
 
-Apply the review-health filter the same way to every module. Do not keep a module with a large external backlog just because a maintainer is active there.
+Apply the review-health filter the same way to every module. Do not keep a module with a large external backlog just because a maintainer is active there. Insufficient evidence is not a filter; `merge-rate-score` handles it. A maintainer invitation on the issue never overrides a contribution policy that excludes the module.
 
 "No linked PR" means none was found. Also search comments, duplicate issues, similar PRs and recent commits. Record the search scope and time.
 
@@ -41,12 +43,12 @@ Rate every remaining candidate on both:
 
 - Sort by the chosen objective. Keep both ratings visible.
 - Impact mode: drop candidates rated Low merge likelihood.
-- Shortlist at most 10. If fewer than 5 remain, say the repo has too few eligible candidates and recommend trying another repo. Do not pad the list with Defer-rated issues; list them only if the user asks.
+- Shortlist at most 10. If fewer remain, report the actual count. Do not pad the list with Defer-rated issues; list them only if the user asks.
 - If every shortlisted candidate has the same merge rating, state that the order comes from the tie-break (mostly impact), not from merge likelihood.
 
 ## Output
 
-Header: search scope (issues, open and closed PRs, comments, recent commits), timestamp, and the review-health classification of each module that produced candidates.
+Header: the uncalibrated-ranking statement from `merge-rate-score`, search scope (issues, open and closed PRs, comments, recent commits), timestamp, and the review-health classification of each module that produced candidates.
 
 For each candidate: issue, merge rating, impact rating, the signal values behind each rating, recommendation (Proceed / Investigate first / Confirm direction first / Defer), unknowns.
 
