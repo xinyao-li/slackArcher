@@ -16,8 +16,8 @@ External: CONTRIBUTOR / FIRST_TIME_CONTRIBUTOR / NONE, excluding bots.
 | Clarity | Clear / Partial / Unclear | Clear: expected vs actual behavior or acceptance criteria stated. |
 | Scope (estimate) | Local / Module / Cross-cutting | From file paths, stack traces, CODEOWNERS. Local: docs, tests, examples, one leaf file. Cross-cutting: public API, persistence, concurrency, multiple owners. |
 | Repro cost | Trivial / Setup / Special env | Special env: hardware, cloud accounts, unavailable OS. |
-| Review health | Healthy / Slow | Healthy: ≥2 external PRs merged on the same paths in 6 months, median first review ≤14 days. |
-| Race risk | None / High | High: P0/critical, unassigned, recent maintainer activity. |
+| Review health | Healthy / Slow / Closed | Taken from the `project-brief` module table for the issue's module. Closed means external PRs there are effectively not reviewed; `screen-candidates` drops these before rating. |
+| Race risk | None / High | High if any: P0/critical and unassigned with recent maintainer activity on the module; a maintainer merged changes to the same files in the last 7 days; an external contributor who opened or updated a PR on the module in the last 14 days commented on, reproduced or offered to fix the issue. Count distinct issues addressed, not PR count: stacked or consolidated PRs are one unit. |
 | Familiarity | Yes / No | User has a merged PR on the same paths. |
 
 ## Rules, in order
@@ -26,7 +26,9 @@ External: CONTRIBUTOR / FIRST_TIME_CONTRIBUTOR / NONE, excluding bots.
 2. **High** if all: Agreement Confirmed; Clarity Clear; Scope Local, or Module with Familiarity Yes; Repro Trivial or Setup; Review Healthy.
 3. Otherwise **Medium**.
 4. Cap at Medium: Agreement or Review health unknown; stalled PR takeover.
-5. Tie-break within a tier: Familiarity, cheaper repro, smaller scope, more recent maintainer confirmation.
+5. Tie-break within a tier, in order: Familiarity Yes; higher impact rating; cheaper repro; smaller scope; more recent maintainer confirmation.
+
+When every candidate lands in the same tier, say so in the output: the order then comes from the tie-break, mostly impact, not from merge likelihood.
 
 ## Re-rating
 
