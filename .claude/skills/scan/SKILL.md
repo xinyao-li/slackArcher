@@ -1,6 +1,6 @@
 ---
 name: scan
-description: Check whether the current repository accepts contributions and shortlist 5-10 candidate issues.
+description: Check whether the current repository accepts contributions and shortlist up to 10 candidate issues.
 disable-model-invocation: true
 ---
 

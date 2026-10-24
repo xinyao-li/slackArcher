@@ -1,6 +1,6 @@
 ---
 name: screen-candidates
-description: Filter and rank open issues by the user's objective (highest merge chance or greatest impact). Stage 2 of the contribution workflow.
+description: Filter open issues, rate Opportunity, Risk and Confidence, and recommend a next action for each. Stage 2 of the contribution workflow.
 ---
 
 # Screen Candidates
@@ -12,44 +12,74 @@ Requires the output of `project-brief`.
 Objective:
 
 - **Highest merge chance**: small, wanted, easy to review
-- **Greatest impact**: painful bug even if harder
+- **Greatest impact**: not yet available (impact scorecard TODO). Say so and continue with highest merge chance.
 
-Environment: "Do you have any special setup? (OS, GPU or hardware, cloud accounts)". Flag issues that need a setup the user lacks as "Cannot reproduce with your setup"; do not recommend Proceed for them.
+Environment: "Do you have any special setup? (OS, GPU or hardware, cloud accounts)". Flag issues that need a setup the user lacks as "Cannot reproduce with your setup"; never recommend Proceed for them.
 
 ## 2. Hard filters
 
 Drop the issue if any apply:
 
 - Contribution type not accepted, or forbidden by the AI / contribution policy
+- Module review health is **Closed** (policy excludes external contributions) in the `project-brief` table
 - Closed or duplicate
-- Linked or similar PR already in progress
+- Linked or similar PR already in progress in the target repository. References from other repositories (forks, downstream projects) are not fixes: record them as downstream workarounds and do not filter on them.
 - Labeled wontfix, not-a-bug, needs-design or needs-RFC
 - Assigned to an active maintainer, or claimed in comments within the last 30 days
-- Module review health is **Closed** in the `project-brief` table
 - Security-labeled, unless public and explicitly open to contributors
 
-Apply the review-health filter the same way to every module. Do not keep a module with a large external backlog just because a maintainer is active there. Insufficient evidence is not a filter; `merge-rate-score` handles it. A maintainer invitation on the issue never overrides a contribution policy that excludes the module.
+A maintainer invitation on the issue never overrides a policy that excludes the module.
 
 "No linked PR" means none was found. Also search comments, duplicate issues, similar PRs and recent commits. Record the search scope and time.
 
-## 3. Rate
+## 3. Target branch
 
-Rate every remaining candidate on both:
+For each remaining candidate, check whether the code the issue names (files, functions) exists on the default branch. Use `gh api` or remote-tracking refs; do not change the working tree or local branches.
 
-- Merge likelihood: run `merge-rate-score`.
-- Impact: TODO, scorecard not yet designed.
+- Exists on the default branch → target the default branch.
+- Missing there but present on a release or maintenance branch → record **Target branch: `<branch>`**.
+- Missing on every maintained branch → drop as "code removed".
 
-## 4. Sort
+## 4. Evaluate
 
-- Sort by the chosen objective. Keep both ratings visible.
-- Impact mode: drop candidates rated Low merge likelihood.
-- Shortlist at most 10. If fewer remain, report the actual count. Do not pad the list with Defer-rated issues; list them only if the user asks.
-- If every shortlisted candidate has the same merge rating, state that the order comes from the tie-break (mostly impact), not from merge likelihood.
+- Run `positive-eval` Part 1 once, then Part 2 for each remaining candidate → **Opportunity**.
+- Run `negative-eval` for each remaining candidate → **Risk**.
+
+## 5. Confidence
+
+Key signals: Agreement, Review health, Scope.
+
+- **High**: acceptance profile has ≥3 qualifying merges, and all key signals are Verified.
+- **Low**: ≥2 key signals Unknown; or Review health Insufficient evidence and Invitation No.
+- **Medium**: otherwise.
+
+Unknown lowers Confidence; it is not Risk.
+
+## 6. Next action
+
+First match wins:
+
+1. Risk High → **Defer**
+2. Agreement None or Unknown → **Confirm direction first**
+3. Confidence Low → **Investigate first**
+4. Opportunity Medium or High → **Proceed**
+5. Otherwise → **Defer**
+
+## 7. Sort
+
+- Order: Opportunity (High first), then Risk (Low first), then Confidence (High first), then Familiarity (user has a merged PR on the same paths), cheaper repro, more recent maintainer confirmation.
+- At most 2 exploratory candidates, labeled.
+- Shortlist at most 10. If fewer remain, report the actual count. Do not pad the list with Defer candidates; list them only if the user asks.
 
 ## Output
 
-Header: the uncalibrated-ranking statement from `merge-rate-score`, search scope (issues, open and closed PRs, comments, recent commits), timestamp, and the review-health classification of each module that produced candidates.
+Show only these two parts. Collected data (review health, acceptance profile, signal values and evidence) supports the decision; show it only if the user asks.
 
-For each candidate: issue, merge rating, impact rating, the signal values behind each rating, recommendation (Proceed / Investigate first / Confirm direction first / Defer), unknowns.
+1. One table:
 
-If no candidate is rated above Low in merge mode, say so and recommend a different repository before suggesting any next action in this one.
+| Issue | Opportunity | Confidence | Recommendation |
+|---|---|---|---|
+
+Recommendation: Next action and a one-line reason. Name the target branch when it is not the default branch.
+
+2. Final recommendation: what to do next. If every candidate's Next action is Defer, say so and recommend a different repository.
