@@ -49,8 +49,9 @@ Responded = every category except No response.
 
 | Health | Rule |
 |---|---|
+| Closed | Contribution policy excludes external contributions to the module |
 | Insufficient evidence | <3 external PRs in 6 months |
-| Closed | Contribution policy excludes external contributions to the module; or ≥3 external PRs, backlog >10:1 and no maintainer response to external PRs in 30 days |
+| Unresponsive | ≥3 external PRs, none responded |
 | Slow | ≥3 external PRs, but backlog >10:1 or median first response >14 days |
 | Healthy | ≥3 external PRs, backlog ≤10:1, median first response ≤14 days |
 
@@ -62,11 +63,14 @@ Record the measurement time. Ratios and thresholds are initial guesses; tune on 
 
 ## Output
 
+For `screen-candidates`; do not present it to the user unless asked.
+
 Repository brief and contribution constraints:
 
 - Contribution types the project accepts from external contributors
 - AI policy requirements
 - Required labels, acceptance criteria and disclosures
 - Module structure
-- Review health table by module (Healthy / Slow / Closed / Insufficient evidence, Owner-fixes flag, per-category counts, measurement time)
+- Review health table by module (Healthy / Slow / Unresponsive / Insufficient evidence / Closed, Owner-fixes flag, per-category counts, measurement time)
+- Per-PR classification, kept for `positive-eval`
 - Build and test commands

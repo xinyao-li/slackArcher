@@ -53,9 +53,9 @@ In Claude Code:
 `scan` will:
 
 1. Read the repo's contribution rules, AI policy, structure and build/test commands.
-2. Ask your objective: highest merge chance or greatest impact.
-3. Filter out ineligible issues and rate the rest.
-4. Show a shortlist of 5-10 candidates with ratings, reasons, recommendation and unknowns.
+2. Ask your objective and your special setup (OS, hardware, cloud accounts).
+3. Filter out ineligible issues, learn what external contributions the repo accepts, and rate the rest.
+4. Show up to 10 candidates in one table (Issue, Opportunity, Confidence, Recommendation), then a final recommendation. Ask for the data behind any rating.
 
 ## Skills
 
@@ -64,10 +64,10 @@ In Claude Code:
 | `scan` | Entry point. User-invoked only. |
 | `project-brief` | Stage 1: eligibility and constraints. |
 | `screen-candidates` | Stage 2: filter and rank issues. |
-| `merge-rate-score` | Merge-likelihood rating (High / Medium / Low). |
+| `positive-eval` | Acceptance profile and Opportunity rating. |
+| `negative-eval` | Risk rating. |
 
 ## Known gaps
 
-- Impact rating is not designed yet; impact mode cannot rate.
-- Rating-to-recommendation mapping is not defined.
+- Impact mode is not designed yet.
 - Progress is not saved between sessions.
