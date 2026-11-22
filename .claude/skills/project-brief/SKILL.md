@@ -19,7 +19,7 @@ Read the current versions on every run:
 
 Measure whether maintainers actually review outside PRs, per module. A repo-wide number hides modules that never merge external work.
 
-Maintainers: `author_association` OWNER / MEMBER / COLLABORATOR. External: everything else, excluding bots.
+Maintainers: `author_association` OWNER / MEMBER / COLLABORATOR. External: everything else. Exclude bots on both sides: a bot's review or comment is never a maintainer response, even with MEMBER association. Identify bots by a `[bot]` suffix, account type Bot, or automation such as CI, CLA and stale bots.
 
 1. Pull PRs from the last 6 months:
 
@@ -61,6 +61,14 @@ Flag the module **Owner-fixes** if Rejected: owner fixed is ≥2 PRs and ≥1/3 
 
 Record the measurement time. Ratios and thresholds are initial guesses; tune on the historical evaluation.
 
+## Comment response
+
+Measure whether maintainers answer external contributors on issues. Take the 100 most recent comments by external, non-bot users on issues from the last 6 months. A comment is answered if a maintainer replies on the same issue afterward.
+
+- Record: answered / total as a fraction, and median days to the reply.
+- **Low** response: reference value, fewer than half answered. State the reasoning behind the judgment.
+- If the project's rules move discussion outside GitHub, note that this rate likely undercounts maintainer engagement.
+
 ## Output
 
 For `screen-candidates`; do not present it to the user unless asked.
@@ -70,7 +78,9 @@ Repository brief and contribution constraints:
 - Contribution types the project accepts from external contributors
 - AI policy requirements
 - Required labels, acceptance criteria and disclosures
+- Discussion channels outside GitHub (Discord, Slack, mailing list) and whether the rules require discussing there before contributing
 - Module structure
 - Review health table by module (Healthy / Slow / Unresponsive / Insufficient evidence / Closed, Owner-fixes flag, per-category counts, measurement time)
 - Per-PR classification, kept for `positive-eval`
+- Comment response (fraction, median days, Low or not, reasoning)
 - Build and test commands

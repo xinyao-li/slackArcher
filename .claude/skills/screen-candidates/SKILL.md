@@ -60,7 +60,7 @@ Unknown lowers Confidence; it is not Risk.
 First match wins:
 
 1. Risk High → **Defer**
-2. Agreement None or Unknown → **Confirm direction first**
+2. Agreement None or Unknown → **Confirm direction first**; if comment response is Low (from `project-brief`), **Proceed** with a minimal PR whose description states the problem and proposed fix
 3. Confidence Low → **Investigate first**
 4. Opportunity Medium or High → **Proceed**
 5. Otherwise → **Defer**
@@ -83,3 +83,18 @@ Show only these two parts. Collected data (review health, acceptance profile, si
 Recommendation: Next action and a one-line reason. Name the target branch when it is not the default branch.
 
 2. Final recommendation: what to do next. If every candidate's Next action is Defer, say so and recommend a different repository.
+
+## Suggested comment
+
+After the output, ask as an open question, without listing options: "Which issues do you want to contribute to? You can include issues outside this list." For an issue outside the shortlist, check it the same way first and tell the user any reason it was dropped or deferred.
+
+For each issue the user names, draft a short English comment for the user to copy and post. Never post it yourself.
+
+1. I'm a new contributor; is this issue open for an external contribution?
+2. Proposed scope: where and how to change it, the regression test, and the target branch if not the default. Ask the maintainer to confirm.
+3. I found no similar PR in the target repository; please point me to one if I missed it.
+
+- Phrase scope as a proposal; at this stage it is an estimate.
+- Add a disclosure if the project's AI policy requires one.
+- Say where to post: the GitHub issue by default, or the channel the project's rules require for discussion.
+- If comment response is Low, adapt the comment into the description of a minimal PR instead.

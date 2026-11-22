@@ -9,9 +9,7 @@ Every signal value carries an evidence tag: **Verified**, **Estimate** or **Unkn
 
 ## Part 1: Acceptance profile (once per repository)
 
-Reuse the per-PR classification from `project-brief`; do not refetch.
-
-Qualifying merges: external PRs merged in the last 12 months, the 20 most recent, excluding the non-evidence merges listed by `project-brief` (vendor integrations, maintainer-invited PRs, bots).
+Qualifying merges: external PRs merged in the last 6 months, the 20 most recent, excluding the non-evidence merges listed by `project-brief` (vendor integrations, maintainer-invited PRs, bots). Reuse the per-PR classification from `project-brief`. If fewer than 3 qualify, extend to 12 months; fetch only the extra 6 months.
 
 For each qualifying merge, extract:
 
@@ -30,7 +28,7 @@ Also list Rejected: quality and Rejected: owner fixed PRs as counterexamples.
 
 ### Output
 
-- **Contribution fit**: 3-5 patterns of external contributions that get accepted. Each pattern: description, PRs, time range, sample size. A pattern with <3 PRs is **tentative**.
+- **Contribution fit**: 3-5 patterns of external contributions that get accepted. Each pattern: description, PRs, time range, sample size. A pattern with <3 PRs is **tentative**. Drop a pattern whose module no longer exists on the default branch.
 - **Maintainer priority**: what maintainers currently value, from milestones, explicit maintainer requests and recent maintainer comments. Merge counts alone do not establish priority.
 - Counterexamples: what was rejected and why.
 
@@ -39,13 +37,15 @@ Also list Rejected: quality and Rejected: owner fixed PRs as counterexamples.
 | Signal | Values | Definition |
 |---|---|---|
 | Pattern match | Strong / Partial / None | Strong: same module and problem type as a non-tentative pattern. Partial: one of the two matches. Tentative patterns are shown but do not count. |
-| Agreement | Confirmed / Implicit / None | Confirmed: maintainer said bug is real or PR welcome, or applied `help wanted` in a repo that uses it. Implicit: maintainer opened or triaged it. Disputed is a Risk signal. |
+| Agreement | Confirmed / Implicit / None | Confirmed: maintainer said bug is real or PR welcome, or applied `help wanted` in a repo that uses it. Implicit: maintainer opened or triaged it and is not working on it themselves (that case is Race risk in `negative-eval`). Disputed is a Risk signal. |
 | Invitation | Yes / No | A maintainer explicitly invited a fix on this issue in the last 90 days. Yes implies Agreement Confirmed. |
 | Clarity | Clear / Partial / Unclear | Clear: expected vs actual behavior or acceptance criteria stated. |
+| Trivial | Yes / No | Yes: the fix changes only wording, punctuation or formatting, with no behavior change. |
 | Minimal fix path | Text | Shown as a hypothesis; not scored. |
 
 Rules:
 
+- Trivial Yes → **Low**.
 - **High**: Pattern Strong, Agreement Confirmed, Clarity Clear.
 - **Medium**: two of: Pattern Strong or Partial; Agreement Confirmed; Clarity Clear.
 - **Low**: otherwise.
