@@ -2,7 +2,7 @@
 
 Claude Code skills that find, fix and submit bug fixes in open source repositories. Design: `DESIGN.md`.
 
-Status: first draft. Only `scan` is implemented.
+Status: first draft. `scan` and `investigate` are implemented.
 
 ## Requirements
 
@@ -66,6 +66,7 @@ In Claude Code:
 | `screen-candidates` | Stage 2: filter and rank issues. |
 | `positive-eval` | Acceptance profile and Opportunity rating. |
 | `negative-eval` | Risk rating. |
+| `investigate` | Stages 3-4: reproduce, root cause and internal impact, with evidence scripts. |
 
 ## Known gaps
 
